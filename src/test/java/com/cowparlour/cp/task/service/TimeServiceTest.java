@@ -1,4 +1,4 @@
-package service;
+package com.cowparlour.cp.task.service;
 
 import com.cowparlour.cp.task.dto.Average;
 import com.cowparlour.cp.task.dto.TaskTime;
