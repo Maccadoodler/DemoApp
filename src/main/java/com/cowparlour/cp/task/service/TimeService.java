@@ -1,3 +1,6 @@
+/*
+ * (C): cowparlour.com  2025
+ */
 package com.cowparlour.cp.task.service;
 
 import com.cowparlour.cp.task.dto.Average;
@@ -7,17 +10,20 @@ import com.cowparlour.cp.task.repository.TaskMetric;
 import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.util.Optional;
 
+/**
+ * Service Bean to process how the averages are stored and processed
+ */
+
 @Service
 public class TimeService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TimeService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TimeService.class);
 
     private final DataStore dataStore;
 
@@ -25,17 +31,28 @@ public class TimeService {
         this.dataStore = dataStore;
     }
 
+    /**
+     * Checks the Datastore to see if there is a record for the given task.
+     * if so returns the average duration
+     * @param task      ID of the task that is being queried
+     * @return          Optional DTO of the average duration for the given task
+     */
     @Nonnull
     public Optional<Average> getAverage(@Nonnull String task) {
 
         Optional<Average> result;
 
-        logger.info("+ GetAverage");
+        LOGGER.info("+ GetAverage");
         try {
-            Optional<TaskMetric> taskData = dataStore.findById(task);
-            result = taskData.map(TaskMetric -> new Average(TaskMetric.task(),
-                    TaskMetric.totalTime().divide(TaskMetric.count())));
-         } catch (DataAccessException e) {
+            Optional<TaskMetric> taskData = dataStore.findByTask(task);
+            if (taskData.isPresent()) {
+                result = taskData.map(u -> new Average(u.task(),
+                        u.totalTime().divide(u.count())));
+            } else {
+                result = Optional.empty();
+            }
+
+        } catch (RuntimeException e) {
 
             throw new ServiceFailure("Problem with reading Datastore", e);
         }
@@ -43,41 +60,36 @@ public class TimeService {
         return result;
     }
 
+    /**
+     * Updates the datastore with taskTime data.
+     * This is transactional read/update function
+     * @param data      new duration for a given task
+     */
     @Transactional
     public void updateTask(@Nonnull TaskTime data) {
-
-        logger.info("+ UpdateTask");
-
         TaskMetric details;
 
+        LOGGER.info("+ UpdateTask");
         try {
-            Optional<TaskMetric> current = dataStore.findById(data.task());
+            Optional<TaskMetric> current = dataStore.findByTask(data.task());
             if (current.isPresent()) {
                 BigInteger count = current.get().count().add(BigInteger.valueOf(1));
                 BigInteger totalTime = current.get().totalTime().add(data.duration());
-                details = new TaskMetric(data.task(), totalTime, count);
-
+                details = new TaskMetric(current.get().id(),data.task(), totalTime, count);
 
             } else {
-                details = new TaskMetric(data.task(), data.duration(), BigInteger.valueOf(1));
-
+                details = new TaskMetric(null,data.task(), data.duration(), BigInteger.valueOf(1));
             }
-        } catch (DataAccessException e) {
-            logger.debug("Update Problem - :" + e.getMessage());
+            dataStore.save(details);
+        } catch (RuntimeException e) {
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Update Problem - :" + e.getMessage());
+            }
+
             throw new ServiceFailure("Problem with updating Datastore", e);
         }
 
-        saveOrInsert(details);
-    }
-
-
-    public void saveOrInsert(@Nonnull TaskMetric metric) {
-
-        if (dataStore.existsById(metric.task())) {
-            dataStore.save(metric);
-        } else {
-            dataStore.save(metric);
-        }
     }
 
 }

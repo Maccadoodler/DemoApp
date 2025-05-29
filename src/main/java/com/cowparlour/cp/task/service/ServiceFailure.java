@@ -1,5 +1,12 @@
+/*
+ * (C): cowparlour.com  2025
+ */
+
 package com.cowparlour.cp.task.service;
 
+/**
+ * Domain specific exception.
+ */
 public class ServiceFailure extends RuntimeException {
     public ServiceFailure(String message) {
         super(message);
