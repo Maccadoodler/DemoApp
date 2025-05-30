@@ -21,13 +21,13 @@ import java.util.Optional;
  */
 
 @Service
-public class TimeService {
+public class TaskService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TimeService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskService.class);
 
     private final DataStore dataStore;
 
-    public TimeService(@Nonnull DataStore dataStore) {
+    public TaskService(@Nonnull DataStore dataStore) {
         this.dataStore = dataStore;
     }
 
@@ -43,9 +43,10 @@ public class TimeService {
         Optional<Average> result;
 
         LOGGER.info("+ GetAverage");
+        // Need to double check the count is not zero !
         try {
             Optional<TaskMetric> taskData = dataStore.findByTask(task);
-            if (taskData.isPresent()) {
+            if (taskData.isPresent() && !taskData.get().count().equals(BigInteger.ZERO)) {
                 result = taskData.map(u -> new Average(u.task(),
                         u.totalTime().divide(u.count())));
             } else {
@@ -70,9 +71,15 @@ public class TimeService {
         TaskMetric details;
 
         LOGGER.info("+ UpdateTask");
+
+        if ((data.task() == null) || (data.duration() == null)) {
+            throw new IllegalArgumentException("Invalid parameter in payload.");
+        }
+
         try {
             Optional<TaskMetric> current = dataStore.findByTask(data.task());
             if (current.isPresent()) {
+
                 BigInteger count = current.get().count().add(BigInteger.valueOf(1));
                 BigInteger totalTime = current.get().totalTime().add(data.duration());
                 details = new TaskMetric(current.get().id(),data.task(), totalTime, count);

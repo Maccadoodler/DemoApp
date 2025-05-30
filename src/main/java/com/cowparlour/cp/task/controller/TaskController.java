@@ -7,7 +7,7 @@ package com.cowparlour.cp.task.controller;
 import com.cowparlour.cp.task.dto.Average;
 import com.cowparlour.cp.task.dto.TaskTime;
 import com.cowparlour.cp.task.service.ServiceFailure;
-import com.cowparlour.cp.task.service.TimeService;
+import com.cowparlour.cp.task.service.TaskService;
 import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +22,14 @@ import java.util.Optional;
  */
 
 @RestController
-@RequestMapping("/time")
-public class TimeController {
+@RequestMapping("/task")
+public class TaskController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TimeController.class);
-    private final TimeService timeService;
+    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
+    private final TaskService taskService;
 
-    public TimeController(@Nonnull TimeService timeService) {
-        this.timeService = timeService;
+    public TaskController(@Nonnull TaskService taskService) {
+        this.taskService = taskService;
     }
 
     /**
@@ -45,7 +45,7 @@ public class TimeController {
         ResponseEntity<?> response;
 
         try {
-            Optional<Average> average = timeService.getAverage(task);
+            Optional<Average> average = taskService.getAverage(task);
 
             if (average.isPresent()) {
                 response = ResponseEntity.ok(average);
@@ -57,7 +57,10 @@ public class TimeController {
         } catch (ServiceFailure e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
-        } catch (RuntimeException e) {
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Invalid Payload");
+        }  catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Server error");
         }
@@ -70,11 +73,11 @@ public class TimeController {
      *                  task and duration.
      * @return          A HTTP status code with a message
      */
-    @PostMapping("/record")
+    @PostMapping("/duration")
     public ResponseEntity<String> recordTask(@RequestBody TaskTime request) {
 
         try {
-            timeService.updateTask(request);
+            taskService.updateTask(request);
             return ResponseEntity.ok(String.format("Task %s processed successfully.", request.task()));
 
         } catch (ServiceFailure e) {

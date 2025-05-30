@@ -3,6 +3,8 @@
  */
 package com.cowparlour.cp.task;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -36,7 +38,8 @@ class AveragesApplicationTests {
 
 	@Test
 	void testAverage_NoRecord() throws Exception {
-		mockMvc.perform(get("/time/average/John"))
+		mockMvc.perform(get("/task/average/John")
+				.with(jwt().jwt(jwt -> jwt.claim("sub", "test-user"))))
 				.andExpect(status().isNotFound());
 	}
 
@@ -51,19 +54,20 @@ class AveragesApplicationTests {
 		String json = objectMapper.writeValueAsString(input);
 		String jsonTwo = objectMapper.writeValueAsString(inputTwo);
 
-		mockMvc.perform(post("/time/record")
-						.contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post("/task/duration")
+						.with(jwt().jwt(jwt -> jwt.claim("sub", "test-user")))						.contentType(MediaType.APPLICATION_JSON)
 						.content(json))
 				.andExpect(status().isOk())
 				.andExpect(content().string("Task jmc processed successfully."));
 
-		mockMvc.perform(post("/time/record")
-						.contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post("/task/duration")
+						.with(jwt().jwt(jwt -> jwt.claim("sub", "test-user")))						.contentType(MediaType.APPLICATION_JSON)
 						.content(jsonTwo))
 				.andExpect(status().isOk())
 				.andExpect(content().string("Task jmc processed successfully."));
 
-		mockMvc.perform(get("/time/average/jmc"))
+		mockMvc.perform(get("/task/average/jmc")
+					.with(jwt().jwt(jwt -> jwt.claim("sub", "test-user"))))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.task").value("jmc"))
 				.andExpect(jsonPath("$.averageDuration").value(BigInteger.valueOf(15L)));

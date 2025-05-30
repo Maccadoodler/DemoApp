@@ -1,3 +1,6 @@
+/*
+ * (C): cowparlour.com  2025
+ */
 package com.cowparlour.cp.task;
 
 import org.springframework.boot.SpringApplication;
