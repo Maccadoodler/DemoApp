@@ -111,20 +111,12 @@ functionality. Please ensure the "Security Token" step is configured with
     * Okta created 'client_id' as username and 'client_secret' as password.
 
 
-## Docker (Optional)
+## Docker 
 
-1. Build and run with Docker:
-
-   docker build -t myproject .  
-   docker run -p 8080:8080 myproject
-
-2. Or use Docker Compose:
-
-   docker-compose up --build
 
 ## Contributing
 
-Contributions are welcome!
+This is unmonitored as it is a demo.
 
 1. Fork this repo
 2. Create your feature branch: `git checkout -b feature/your-feature`
@@ -138,4 +130,4 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-Created by @maccadoodler – feel free to reach out!
+Created by @maccadoodler – This is unmonitored as it is a demo.!
