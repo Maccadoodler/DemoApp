@@ -107,7 +107,7 @@ public class TaskControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.task").value("John"))
-                .andExpect(jsonPath("$.averageDuration").value(120));
+                .andExpect(jsonPath("$.average").value(120));
 
     }
 

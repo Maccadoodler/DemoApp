@@ -70,7 +70,7 @@ class AveragesApplicationTests {
 					.with(jwt().jwt(jwt -> jwt.claim("sub", "test-user"))))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.task").value("jmc"))
-				.andExpect(jsonPath("$.averageDuration").value(BigInteger.valueOf(15L)));
+				.andExpect(jsonPath("$.average").value(BigInteger.valueOf(15L)));
 	}
 
 }

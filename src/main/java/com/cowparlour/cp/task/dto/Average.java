@@ -9,9 +9,9 @@ import java.math.BigInteger;
 /**
  * DTO used to return the average duration for the given task
  * @param task                  Id of the task
- * @param averageDuration       the average time a task takes to complete
+ * @param average              the average time a task takes to complete
  */
 @Nonnull
-public record Average(@Nonnull String task, BigInteger averageDuration) {
+public record Average(@Nonnull String task, BigInteger average) {
 
 }

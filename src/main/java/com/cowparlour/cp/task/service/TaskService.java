@@ -8,6 +8,7 @@ import com.cowparlour.cp.task.dto.TaskTime;
 import com.cowparlour.cp.task.repository.DataStore;
 import com.cowparlour.cp.task.repository.TaskMetric;
 import jakarta.annotation.Nonnull;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -54,7 +55,7 @@ public class TaskService {
             }
 
         } catch (RuntimeException e) {
-
+            LOGGER.error("Datastore failure", e);
             throw new ServiceFailure("Problem with reading Datastore", e);
         }
 
@@ -72,7 +73,7 @@ public class TaskService {
 
         LOGGER.info("+ UpdateTask");
 
-        if ((data.task() == null) || (data.duration() == null)) {
+        if (!Strings.isNotEmpty(data.task()) || (data.duration() == null)) {
             throw new IllegalArgumentException("Invalid parameter in payload.");
         }
 
@@ -90,10 +91,7 @@ public class TaskService {
             dataStore.save(details);
         } catch (RuntimeException e) {
 
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Update Problem - :" + e.getMessage());
-            }
-
+            LOGGER.error("Datastore update failure", e);
             throw new ServiceFailure("Problem with updating Datastore", e);
         }
 

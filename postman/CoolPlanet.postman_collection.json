@@ -1,0 +1,456 @@
+{
+	"info": {
+		"_postman_id": "4548a498-ce46-4a19-9ab8-384f7c228593",
+		"name": "CoolPlanet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21439485"
+	},
+	"item": [
+		{
+			"name": "Security Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"access_token\", jsonData.access_token);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "eIXv9YBNrKgIlblt4wl4a2aBZnYeEWTR_rggJWc17BTqSLU8axYczkuw1xJwAZHj",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "0oarvkb3geUmNOiWA697",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "scope",
+							"value": "planet",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://trial-3595923.okta.com/oauth2/default/v1/token",
+					"protocol": "https",
+					"host": [
+						"trial-3595923",
+						"okta",
+						"com"
+					],
+					"path": [
+						"oauth2",
+						"default",
+						"v1",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Duration",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"task\": \"John\",\"duration\":10}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/task/duration",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"task",
+						"duration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Duration two",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"task\":\"John\",\"duration\":30}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/task/duration",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"task",
+						"duration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid Task Name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400 for bad request\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"task\":null,\"duration\":30}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/task/duration",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"task",
+						"duration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid No Duration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400 for bad request\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"task\":\"John\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/task/duration",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"task",
+						"duration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Average",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response body to JSON\r",
+							"const responseBody = pm.response.json();\r",
+							"\r",
+							"// Test to check if the 'task' value is present and is a string\r",
+							"pm.test('Task value should exist and be a string', () => {\r",
+							"    pm.expect(responseBody.task).to.exist;\r",
+							"    pm.expect(responseBody.task).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"// Test to check the actual value of the 'task'\r",
+							"pm.test('The actual value of the task should be \"John\"', () => {\r",
+							"    pm.expect(responseBody.task).to.equal('John');\r",
+							"});\r",
+							"\r",
+							"// Test to check the actual value of the 'average'\r",
+							"pm.test('The actual value of the average should be 20', () => {\r",
+							"    pm.expect(responseBody.average).to.equal(20);\r",
+							"});\r",
+							"\r",
+							"// Test to check if the 'average' value is present and is a number\r",
+							"pm.test('average value should exist and be a number', () => {\r",
+							"    pm.expect(responseBody.average).to.exist;\r",
+							"    pm.expect(responseBody.average).to.be.a('number');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/task/average/{{task}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"task",
+						"average",
+						"{{task}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Average No Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response body to JSON\r",
+							"const responseBody = pm.response.json();\r",
+							"\r",
+							"// Test to check if the 'task' value is present and is a string\r",
+							"pm.test('Task value should exist and be a string', () => {\r",
+							"    pm.expect(responseBody.task).to.exist;\r",
+							"    pm.expect(responseBody.task).to.be.a('string');\r",
+							"});\r",
+							"\r",
+							"// Test to check the actual value of the 'task'\r",
+							"pm.test('The actual value of the task should be \"John\"', () => {\r",
+							"    pm.expect(responseBody.task).to.equal('John');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Test to check if the 'average' value is present and is a number\r",
+							"pm.test('average value should exist and be a number', () => {\r",
+							"    pm.expect(responseBody.average).to.exist;\r",
+							"    pm.expect(responseBody.average).to.be.a('number');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/task/average/{{task}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"task",
+						"average",
+						"{{task}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Average No Task",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/task/average/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"task",
+						"average",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}

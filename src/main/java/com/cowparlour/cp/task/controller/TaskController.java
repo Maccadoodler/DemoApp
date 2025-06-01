@@ -25,7 +25,9 @@ import java.util.Optional;
 @RequestMapping("/task")
 public class TaskController {
 
-    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
+    /* TODO break out the exception handling into a ExceptionHandlingController  */
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
     private final TaskService taskService;
 
     public TaskController(@Nonnull TaskService taskService) {
@@ -51,16 +53,19 @@ public class TaskController {
                 response = ResponseEntity.ok(average);
             } else {
                 response = ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-                logger.error("Not found");
+                LOGGER.info("Not found");
 
             }
         } catch (ServiceFailure e) {
+            LOGGER.error("Service Failure", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
         } catch (IllegalArgumentException e) {
+            LOGGER.error("Argument Failure", e);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Invalid Payload");
         }  catch (RuntimeException e) {
+            LOGGER.error("Unknown Failure", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Server error");
         }
@@ -81,9 +86,15 @@ public class TaskController {
             return ResponseEntity.ok(String.format("Task %s processed successfully.", request.task()));
 
         } catch (ServiceFailure e) {
+            LOGGER.error("Service Failure", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("Invalid argument", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
         } catch (RuntimeException e) {
+            LOGGER.error("Unknown Failure", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Server error");
         }

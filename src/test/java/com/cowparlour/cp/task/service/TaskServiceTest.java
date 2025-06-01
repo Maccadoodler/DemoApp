@@ -27,7 +27,7 @@ public class TaskServiceTest {
 
         Optional<Average> result = service.getAverage("aaa");
         Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(result.get().averageDuration(), BigInteger.valueOf(5L));
+        Assertions.assertEquals(result.get().average(), BigInteger.valueOf(5L));
     }
 
     @Test
