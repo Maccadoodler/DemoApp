@@ -112,6 +112,17 @@ functionality. Please ensure the "Security Token" step is configured with
 
 
 ## Docker 
+To build docker container, find the root directory of the project.
+Using for example Docker Desktop, run
+
+```bash
+docker build -t spring-app .
+docker run -d -p 8085:8085 --name coolplanet2 spring-app --spring.profiles.active=docker
+```
+In this profile the https has been removed as the assumption is that the docker container will run behind 
+a reverse proxy which should terminate the https.
+
+
 
 
 ## Contributing
