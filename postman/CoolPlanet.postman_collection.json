@@ -15,6 +15,11 @@
 						"exec": [
 							"var jsonData = pm.response.json();\r",
 							"pm.environment.set(\"access_token\", jsonData.access_token);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
 							""
 						],
 						"type": "text/javascript",
@@ -28,12 +33,12 @@
 					"basic": [
 						{
 							"key": "password",
-							"value": "xxxxxxx",
+							"value": "xxxx",
 							"type": "string"
 						},
 						{
 							"key": "username",
-							"value": "xxxx",
+							"value": "xxx",
 							"type": "string"
 						}
 					]
@@ -81,6 +86,21 @@
 		},
 		{
 			"name": "Duration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 \", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -88,10 +108,60 @@
 				"method": "POST",
 				"header": [
 					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
 						"key": "Authorization",
 						"value": "Bearer {{access_token}}",
 						"type": "text"
-					},
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"task\": \"John\",\"duration\":10}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/task/duration",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"task",
+						"duration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Duration No Authorization",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
 					{
 						"key": "Content-Type",
 						"value": "application/json",
@@ -122,6 +192,21 @@
 		},
 		{
 			"name": "Duration two",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -402,14 +487,53 @@
 			"response": []
 		},
 		{
+			"name": "Average No Authorization",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {\r",
+							"    pm.response.to.have.status(401);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/task/average/{{task}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"task",
+						"average",
+						"{{task}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Average No Task",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 404\", function () {\r",
-							"    pm.response.to.have.status(404);\r",
+							"pm.test(\"Status code is 403\", function () {\r",
+							"    pm.response.to.have.status(403);\r",
 							"});\r",
 							""
 						],
