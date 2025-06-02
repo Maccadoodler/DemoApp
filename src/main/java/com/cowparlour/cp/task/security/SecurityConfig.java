@@ -39,8 +39,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/h2-console/**")
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/task/**").authenticated()
                 )
                 .oauth2ResourceServer(u -> u.jwt(withDefaults()));
         return http.build();

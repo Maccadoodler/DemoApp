@@ -106,9 +106,12 @@ keytool -genkeypair -alias myserver  -keyalg RSA  -keysize 2048  -storetype PKCS
 
 ### Postman
 A Postman test file in "postman/CoolPlanet.postman_collection.json" can be run in QA or DEV mode to verify 
-functionality. Please ensure the "Security Token" step is configured with 
+functionality. Please ensure the "Security Token" collectionstep is configured with 
     * Basic Authentication
     * Okta created 'client_id' as username and 'client_secret' as password.
+    
+Depending on the deployment set the CoolPlanet environment variable 'base_url' to reflect the required setup.
+    eg https://localhost:8443 or http://localhost:8086 depending on your 
 
 
 ## Docker 
@@ -117,7 +120,7 @@ Using for example Docker Desktop, run
 
 ```bash
 docker build -t spring-app .
-docker run -d -p 8085:8085 --name coolplanet2 spring-app --spring.profiles.active=docker
+docker run -d -p 8086:8086 --name coolplanet spring-app --spring.profiles.active=docker
 ```
 In this profile the https has been removed as the assumption is that the docker container will run behind 
 a reverse proxy which should terminate the https.
