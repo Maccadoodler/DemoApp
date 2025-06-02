@@ -9,7 +9,8 @@ and security (Okta) integration. Data is persisted in a database.
 
 1. Clone the repository:
    git clone https://github.com/Maccadoodler/DemoApp.git
-   cd myproject
+  
+    use default ('working') branch.
 
 2. Configure your database:
     ### Dev
@@ -85,7 +86,7 @@ In order to provide authentication, an Oauth identity provider like OKTA should 
 ```bash
 spring.security.oauth2.resourceserver.jwt.issuer-uri=https://trial-3595923.okta.com/oauth2/default
 ```
-and for HTTPs a cert needs to be placed in the classpath.  This means the enoints are on https://localhost:8443/...
+and for HTTPs a cert needs to be placed in the classpath.  This means the endpoints are on https://localhost:8443/...
 
 ```bash
 server.port=8443
@@ -106,12 +107,12 @@ keytool -genkeypair -alias myserver  -keyalg RSA  -keysize 2048  -storetype PKCS
 
 ### Postman
 A Postman test file in "postman/CoolPlanet.postman_collection.json" can be run in QA or DEV mode to verify 
-functionality. Please ensure the "Security Token" collectionstep is configured with 
+functionality. Please ensure the "Security Token" collection step is configured with 
     * Basic Authentication
     * Okta created 'client_id' as username and 'client_secret' as password.
     
 Depending on the deployment set the CoolPlanet environment variable 'base_url' to reflect the required setup.
-    eg https://localhost:8443 or http://localhost:8086 depending on your 
+    eg https://localhost:8443 or http://localhost:8086 depending on your deployment
 
 
 ## Docker 
@@ -131,12 +132,6 @@ a reverse proxy which should terminate the https.
 ## Contributing
 
 This is unmonitored as it is a demo.
-
-1. Fork this repo
-2. Create your feature branch: `git checkout -b feature/your-feature`
-3. Commit your changes
-4. Push to the branch: `git push origin feature/your-feature`
-5. Open a pull request
 
 ## License
 
